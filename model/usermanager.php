@@ -20,13 +20,13 @@ class UserManager {
 		$email = mysqli_real_escape_string($link, $email);
 		$mobile = mysqli_real_escape_string($link, $mobile);
 		$description = mysqli_real_escape_string($link, $description);
-		$query = "INSERT INTO users(user_name, user_password, user_mobile) VALUES ('$username', '$password', '$mobile');";
-		if ($email != "") {
-			$query .= "UPDATE users SET email='$email';";
-		}
+		$query = "INSERT INTO users(user_name, user_password, user_mobile, user_email) VALUES ('$username', '$password', '$mobile', '$email');";
+		#echo $query . "<br>";
+		DBManager::executeQuery($query);
 		if ($description != "") {
-			$query .= "UPDATE users SET descrption='$description';";
+			$query = "UPDATE users SET user_description='$description' WHERE user_email='$email';";
 		}
+		#echo $query;
 		DBManager::executeQuery($query);
 	}
 }

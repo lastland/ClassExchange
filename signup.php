@@ -1,7 +1,8 @@
 <html>
 	<head>
 		<title>交大课程交易中心</title>
-		<meta http-equiv="Content-Type" content="html/text; charset=UTF-8"/>
+		<meta http-equiv="Content-Type" content="html/text; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -61,8 +62,10 @@
 		</script>
 	</head>
 	<body>
+		<h2>注册新用户</h2>
 		<form action="register.php" method="post">
 			<table class="regtable">
+				<tr>
 				<tr>
 					<td>用户名：</td>
 					<td><input type="text" id="username" name="username"/></td>
@@ -91,7 +94,7 @@
 				<tr>
 					<td>简介：</td>
 					<td colspan="2">
-						<textarea id="description" name="description" cols="30" rows="3"></textarea>
+						<textarea id="description" name="description" cols="40" rows="5"></textarea>
 					</td>
 				</tr>
 				<tr>

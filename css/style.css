@@ -1,0 +1,38 @@
+h2 {
+	font-family: 楷体;
+	font-size: 25px;
+	text-align: center;
+}
+
+.logintable {
+ 	background: #00e2ff;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: thick;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 0 auto;
+}
+
+.logintable #head {
+	font-size: 17px;
+	font-weight: thick;
+}
+
+.regtable {
+	background: #00e2ff;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: thick;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 0 auto;
+}
+
+.regtable #head {
+	font-family: 楷体;
+	font-size: 22px;
+	padding-bottom: 5px;
+	font-weight: thick;
+	text-align: center;
+}

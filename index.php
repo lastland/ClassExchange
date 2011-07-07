@@ -5,7 +5,7 @@
 	<?php
 	session_start();
 	include_once("config.php");
-	if (isset($_SESSSION['username']))
+	if (isset($_SESSION['username']))
 		header("Location: http://" . $domain . "home.php");
 	else
 		header("Location: http://" . $domain . "signin.php");

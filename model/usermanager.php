@@ -1,16 +1,28 @@
 <?php
 include_once('DBManager.php');
 class UserManager {
-	public static function getUserInfo($userid) {
-		$query = "SELECT pass_word FROM users WHERE user_id=" . $username;
+	public static function getUserInfo($username) {
+		$query = "SELECT user_id, user_name, user_password FROM users WHERE user_name='$username';";
 		$result = DBManager::executeQuery($query);
-		$user_info = array();
 		while ($row = mysqli_fetch_assoc($result)) {
-			$user_info['id'] = $row['user_id'];
-			$user_info['username'] = $row['user_name'];
-			$user_info['password'] = $row['user_password'];
+			$user_info = $row;
 		}
 		return $user_info;
+	}
+
+	public static function getUserInfoById($id) {
+		$query = "SELECT user_id, user_name, user_good_eval, user_bad_eval, authority FROM users WHERE user_id=$id;";
+		#echo $query . "<br>";
+		$result = DBManager::executeQuery($query);
+		while ($row = mysqli_fetch_assoc($result)) {
+			$user_info = $row;
+		}
+		return $user_info;
+	}
+
+	public static function confirmAuthority($id, $level) {
+		$user_info = self::getUserInfoById($id);
+		return ($user_info['authority'] & $level == $level);
 	}
 
 	private static function usernameValid($username) {

@@ -26,8 +26,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="2">
 						<input type="submit" value="提交"/>
+					</td>
+					<td>
+						<input type="button" value="回到首页" onclick="location.href='home.php'"/>
 					</td>
 				</tr>
 			</table>

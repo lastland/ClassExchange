@@ -36,3 +36,59 @@ h2 {
 	font-weight: thick;
 	text-align: center;
 }
+
+.exchange-content {
+	float: left;
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 1% 1% 1% 1%;
+	width: 59.8%;
+}
+
+.exchange-detail {
+	float: left;
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 1% 1% 1% 1%;
+	width: 30.2%;
+}
+
+.classfilter-table {
+	margin: 0 auto;
+}
+
+.classes-table {
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 0 auto;
+	width: 61.8%;
+}
+
+.classes-table td {
+	text-align: center;
+}
+
+.classtable {
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 0 auto;
+}
+
+.classtimetable-head {
+	margin: 0 auto;
+}
+
+.classtimetable-tail {
+	margin: 0 auto;
+}
+
+.classtimetable {
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 0 auto;
+}

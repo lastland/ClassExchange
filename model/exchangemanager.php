@@ -13,6 +13,26 @@ class ExchangeManager {
 		$query = "SELECT " . self::$exchange_id . ", " . self::$class_for_exchange . ", " . self::$user_of_exchange . " FROM exchanges WHERE exchange_id='$exchange_id';";
 		#echo $query;
 		$result = DBManager::executeQuery($query);
+		while ($row = mysqli_fetch_assoc($result)) {
+			$exchange = $row;
+		}
+		return $exchange;
+	}
+
+	public static function getDetailExchange($exchange_id) {
+		$query = "SELECT * FROM classes NATURAL JOIN (SELECT * FROM exchanges NATURAL JOIN users) A WHERE exchange_id=$exchange_id;";
+		echo $query;
+		$result = DBManager::executeQuery($query);
+		while ($row = mysqli_fetch_assoc($result)) {
+			$exchange = $row;
+		}
+		return $exchange;
+	}
+
+	public static function getExchangeInLimit($condition, $start_num, $end_num) {
+		$query = "SELECT " . self::$exchange_id . ", " . self::$class_for_exchange . ", " . self::$user_of_exchange . " FROM exchanges WHERE " . $condition . " LIMIT $start_num, $end_num;";
+		#echo $query;
+		$result = DBManager::executeQuery($query);
 		$exchanges = array();
 		for ($i = 0; $row = mysqli_fetch_assoc($result); $i++) {
 			$exchanges[$i] = $row;
@@ -20,9 +40,9 @@ class ExchangeManager {
 		return $exchanges;
 	}
 
-	public static function getExchangeInLimit($condition, $start_num, $end_num) {
-		$query = "SELECT " . self::$exchange_id . ", " . self::$class_for_exchange . ", " . self::$user_of_exchange . " FROM exchanges WHERE " . $condition . " LIMIT $start_num, $end_num;";
-		#echo $query;
+	public static function getExchangeInLimitByName($class_name, $start_num, $end_num) {
+		$query = "SELECT exchange_id, class_id, class_name, user_id, user_name FROM classes NATURAL JOIN (SELECT * FROM exchanges NATURAL JOIN users) A WHERE INSTR(class_name, '$class_name') > 0 LIMIT $start_num, $end_num;";
+		#echo $query . "<br>";
 		$result = DBManager::executeQuery($query);
 		$exchanges = array();
 		for ($i = 0; $row = mysqli_fetch_assoc($result); $i++) {

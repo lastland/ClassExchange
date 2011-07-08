@@ -12,6 +12,11 @@ function getClassTest() {
 	print_r($result);
 }
 
+function addClassTimeTest() {
+	ClassManager::addClassTime(1, 1, 2, 1);
+}
+
 #addClassTest();
-getClassTest();
+#getClassTest();
+addClassTimeTest();
 ?>

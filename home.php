@@ -14,6 +14,34 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
+			function addExchange() {
+				link = "<?php echo "http://" . $domain . "model/Exchanges/addExchange.php"; ?>";
+				if ($("#class-filter").val() != "") {
+					link += "?class_name=" + $("#class-filter").val();
+				}
+				location.href=link;
+			}
+
+			function showAnExchange(id) {
+				$.ajax({
+					type: "GET",
+					url: "showExchange.php",
+					data: "exchange_id=" + id,
+					dataType: "HTML",
+					success: function(response) {
+						$("#exchange-detail-table").html(response);
+					}
+				});
+			}
+
+			function showExchanges(exchanges) {
+				var theList = "<tr><th>交易号</th><th>课程</th><th>交易拥有者</th></tr>";
+				for (var i = 0; i < exchanges.length; i++) {
+					theList += "<tr onclick='showAnExchange(" + exchanges[i].exchange_id + ")'><td>" + exchanges[i].exchange_id + "</td><td>" + exchanges[i].class_name + "</td><td>" + exchanges[i].user_name + "</td></tr>";
+				}
+				$("#exchanges-list").html(theList);
+			}
+
 			function getExchangeEntries(begin_num, end_num) {
 				$.ajax({
 					type: "GET",
@@ -21,13 +49,21 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 					data: "begin_num=" + begin_num + "&end_num=" + end_num,
 					dataType: "json",
 					success: function(exchanges) {
-							var theList = "<tr><th>交易号</th><th>课程</th><th>交易拥有者</th></tr>";
-							for (var i = 0; i < exchanges.length; i++) {
-								theList += "<tr><td>" + exchanges[i].exchange_id + "</td><td>" + exchanges[i].class_name + "</td><td>" + exchanges[i].user_name + "</td></tr>";
-							}
-							$("#exchanges-list").html(theList);
+							showExchanges(exchanges);
 						}
 					});
+			}
+
+			function getExchanges() {
+				$.ajax({
+					method: "GET",
+					url: "http://<?php echo $domain ?>model/Exchanges/getExchangesByName.php",
+					data: "class_name=" + $("#class-filter").val() + "&begin_num=0&end_num=30",
+					dataType: "json",
+					success: function(exchanges) {
+						showExchanges(exchanges);
+					}
+				});
 			}
 
 			$(document).ready(function() {
@@ -47,18 +83,16 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 					</tr>
 					<tr>
 						<td>
-							<input type="text" name="class_name" />
+							<input type="text" id="class-filter" onchange="getExchanges()" />
 						</td>
 						<td>
-							<input type="button" value="添加一个新交易"/>
+							<input type="button" value="添加一个新交易" onclick="addExchange()"/>
 						</td>
 						<?php
 						if (UserManager::confirmAuthority($user_info['user_id'], 1)) {
 						?>
 						<td>
-							<a href="addClass.php">
-								<input type="button" value="添加一门新课程"/>
-							</a>
+							<input type="button" value="添加一门新课程" onclick="location.href='http://<?php echo $domain; ?>addClass.php';" />
 						</td>
 						<?php
 						}
@@ -70,6 +104,10 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 				<table id="exchanges-list">
 				</table>
 			</div>
+		</div>
+		<div class="exchange-detail">
+		<table id="exchange-detail-table">
+		</table>
 		</div>
 	</body>
 <?php

@@ -3,7 +3,7 @@ include_once('../exchangemanager.php');
 include_once('../usermanager.php');
 include_once('../ClassManager.php');
 if (isset($_GET['begin_num']) && isset($_GET['end_num'])) {
-	$exchange_info = ExchangeManager::getExchangeInLimit('exchange_id > 0', $_GET['begin_num'], $_GET['end_num']);
+	$exchange_info = ExchangeManager::getExchangeInLimit('exchange_status=0', $_GET['begin_num'], $_GET['end_num']);
 	$final_info = array();
 	for ($i = 0; $i < sizeof($exchange_info); $i++) {
 		$user_info = UserManager::getUserInfoById($exchange_info[$i]['user_id']);

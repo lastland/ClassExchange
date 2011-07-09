@@ -4,13 +4,14 @@ include_once('config.php');
 include_once('model/Users/SessionJudge.php');
 include_once('model/exchangemanager.php');
 include_once('model/ClassManager.php');
-if (isset($_GET['host_id'])) {
-	$host_info = ExchangeManager::getDetailExchange($_GET['host_id']);
-	$host_classtime = ClassManager::getClassTime($_GET['host_id']);
-	$count = ExchangeManager::getCompetitorCount($_GET['host_id']);
+if (isset($_GET['exchange_id'])) {
+	$host_info = ExchangeManager::getDetailExchange($_GET['exchange_id']);
+	$host_classtime = ClassManager::getClassTime($_GET['exchange_id']);
+	$count = ExchangeManager::getCompetitorCount($_GET['exchange_id']);
+	$competitors = ExchangeManager::getExchangeCompeteForSomeone($_GET['exchange_id']);
 	$timeTable = array("", "第一节课", "第二节课", "第三节课", "第四节课", "第五节课", "第六节课", "第七节课", "第八节课", "第九节课", "第十节课", "第十一节课", "第十二节课", "第十三节课", "第十四节课");
 	$dayTable = array("", "周一", "周二", "周三", "周四", "周五", "周六", "周日");
-	$guests_info = ExchangeManager::getExchangeAvailableToCompete($_SESSION['id']);
+	$isOwner = ($_SESSION['id'] == $host_info['user_id']);
 ?>
 	<head>
 		<title>交大课程交易中心</title>
@@ -18,26 +19,49 @@ if (isset($_GET['host_id'])) {
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
-		function compete(exchange_id) {
+		function deal(host_id, competitor_id) {
 			$.ajax({
-				type: "POST",
-				url: "<?php echo "http://" . $domain . "model/Exchanges/makeCompete.php"; ?>",
-				data: "host_id=" + <?php echo $host_info['exchange_id']; ?> + "&guest_id=" + exchange_id,
+				type: "post",
+				url: "model/Exchanges/makeDeal.php",
+				data: "host_id=" + host_id + "&competitor_id=" + competitor_id,
 				dataType: "text",
 				success: function(response) {
-					location.href="<?php echo "http://" . $domain . "home.php"; ?>";
+					if (response == "success") {
+						alert("交易成功！");
+						location.href="home.php";
+					} else {
+						alert("对不起，无法达成此交易，可能对方的竞标已经撤销。");
+						location.href="checkCompete.php?exchange_id=<?php echo $_GET['exchange_id']; ?>";
+					}
+				}
+			});
+		}
+
+		function undoCompete(competitor_id) {
+			$.ajax({
+				type: "post",
+				url: "model/Exchanges/undoDeal.php",
+				data: "exchange_id=" + competitor_id,
+				dataType: "text",
+				success: function(response) {
+					if (response == "success") {
+						alert("撤销成功！");
+					} else {
+						alert("出错啦！");
+					}
+					location.href="checkCompete.php?exchange_id=<?php echo $_GET['exchange_id']; ?>";
 				}
 			});
 		}
 		</script>
 	</head>
 	<body>
-		<h2>你想要竞标的交易</h2>
+		<h2>查看竞标情况</h2>
 		<center><input type="button" value="回到首页" onclick="location.href='home.php'" /></center>
-		<div id="host-div">
+		<div class="host-div">
 			<table>
 				<tr>
-					<td>交易编号：</td>
+					<td>交易编号:</td>
 					<td colspan="2"><?php echo $host_info['exchange_id']; ?></td>
 				</tr>
 				<tr>
@@ -87,7 +111,7 @@ if (isset($_GET['host_id'])) {
 				}
 				?>
 				<tr>
-					<th colspan="3">交易主：<?php echo $host_info['user_name']; ?></th>
+					<th colspan="3">交易主：<?php echo $host_info['user_name']; if ($isOwner) {echo " ( It's you! ) ";} ?></th>
 				</tr>
 				<tr>
 					<td>ID：</td>
@@ -103,33 +127,34 @@ if (isset($_GET['host_id'])) {
 				</tr>
 			</table>
 		</div>
-		<h2>可参与竞标的交易</h2>
-		<div id="my-exchanges-div">
+		<h2>参与竞标该交易的有</h2>
+		<div id="competitors-div">
 			<table>
 				<tr>
 					<th>交易编号</th>
-					<th>交易课程</th>
-					<th>目前竞标的订单</th>
+					<th>课程编号</th>
+					<th>课程名称</th>
 					<th>操作</th>
 				</tr>
 				<?php
-				for ($i = 0; $i < sizeof($guests_info); $i++) {
-					echo "<tr><td>" . $guests_info[$i]['exchange_id'] . "</td>";
-					echo "<td>" . $guests_info[$i]['class_name'] . "</td>";
-					if (isset($guests_info[$i]['exc_exchange_id'])) {
-						echo "<td>" . $guests_info[$i]['exc_exchange_id'] . "</td>";
+				for ($i = 0; $i < sizeof($competitors); $i++) {
+					echo "<tr><td>" . $competitors[$i]['exchange_id'] . "</td>";
+					echo "<td>" . $competitors[$i]['class_id'] . "</td>";
+					echo "<td>" . $competitors[$i]['class_name'] . "</td><td>";
+					if ($isOwner) {
+						echo "<input type='button' value='成交！' onclick='deal(" . $host_info['exchange_id'] . ", " . $competitors[$i]['exchange_id'] . ")'/>";
 					} else {
-						echo "<td>无</td>";
+						if ($competitors[$i]['user_id'] == $_SESSION['id']) {
+							echo "<input type='button' value='撤销' onclick='undoCompete(" . $competitors[$i]['exchange_id'] . ")' />";
+						}
 					}
-					echo "<td><input type='button' value='用它来竞标！' onclick='compete(" . $guests_info[$i]['exchange_id'] . ")' /></td></tr>";
+					echo "</td></tr>";
 				}
 				?>
 			</table>
 		</div>
 	</body>
 <?php
-} else {
-	header("Location: http://" . $domain . "index.php");
 }
 ?>
 </html>

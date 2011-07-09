@@ -61,6 +61,28 @@ class ExchangeManager {
 		return $exchanges;
 	}
 
+	public static function getExchangeAvailableToCompete($user_id) {
+		$query = "SELECT * FROM classes NATURAL JOIN exchanges WHERE exchanges.user_id=$user_id AND exchanges.exchange_status=0";
+		#echo $query . "<br>";
+		$result = DBManager::executeQuery($query);
+		$exchanges = array();
+		for ($i = 0; $row = mysqli_fetch_assoc($result); $i++) {
+			$exchanges[$i] = $row;
+		}
+		return $exchanges;
+	}
+
+	public static function getExchangeCompeteForSomeone($exchange_id) {
+		$query = "SELECT * FROM classes NATURAL JOIN exchanges WHERE exchanges.exc_exchange_id=$exchange_id;";
+		#echo $query . "<br>";
+		$result = DBManager::executeQuery($query);
+		$exchanges = array();
+		for ($i = 0; $row = mysqli_fetch_assoc($result); $i++) {
+			$exchanges[$i] = $row;
+		}
+		return $exchanges;
+	}
+
 	public static function addExchange($class_id, $user_id) {
 		$query = "INSERT INTO exchanges(" . self::$class_for_exchange . ", " . self::$user_of_exchange . ", " . self::$exchange_status . ") VALUES($class_id, $user_id, 0);";
 		#echo $query . "<br>";
@@ -69,7 +91,25 @@ class ExchangeManager {
 
 	public static function addCompete($competitor_id, $host_id) {
 		$query = "UPDATE exchanges SET " . self::$exchange_compete_for . " = $host_id WHERE exchange_id = $competitor_id;";
-		echo $query . "<br>";
+		#echo $query . "<br>";
+		DBManager::executeQuery($query);
+	}
+
+	public static function makeDeal($competitor_id, $host_id) {
+		$queries = array(
+			"UPDATE exchanges SET exc_exchange_id3=$host_id WHERE exchange_id=$competitor_id;",
+			"UPDATE exchanges SET exc_exchange_id2=$competitor_id WHERE exchange_id=$host_id;", 
+			"UPDATE exchanges SET exc_exchange_id=NULL WHERE exchange_id=$competitor_id;",
+			"UPDATE exchanges SET exc_exchange_id=NULL WHERE exchange_id=$host_id;",
+			"UPDATE exchanges SET exchange_status=1 WHERE exchange_id=$competitor_id;",
+			"UPDATE exchanges SET exchange_status=1 WHERE exchange_id=$host_id;");
+		#print_r($queries);
+		DBManager::executeTransaction($queries);
+	}
+
+	public static function undoDeal($competitor_id) {
+		$query = "UPDATE exchanges SET exc_exchange_id=NULL WHERE exchange_id=$competitor_id;";
+		#echo $query . "<br>";
 		DBManager::executeQuery($query);
 	}
 }

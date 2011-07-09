@@ -28,11 +28,11 @@ if (isset($_GET['exchange_id'])) {
 <?php
 	if ($exchange['user_id'] != $_SESSION['id']) {
 ?>
-	<td colspan="2"><input type="button" value="参与竞标" /></td>
+	<td colspan="2"><input type="button" value="参与竞标" onclick="location.href='competeExchange.php?host_id=<?php echo $exchange['exchange_id']; ?>'" /></td>
 <?php
 	}
 ?>
-	<td colspan="2"><input type="button" value="查看竞标情况" /></td>
+	<td colspan="2"><input type="button" value="查看竞标情况" onclick="location.href='checkCompete.php?exchange_id=<?php echo $exchange['exchange_id']; ?>'" /></td>
 </tr>
 <?php
 }

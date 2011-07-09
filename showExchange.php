@@ -19,8 +19,20 @@ if (isset($_GET['exchange_id'])) {
 <tr>
 	<td>课程编号：</td>
 	<td><?php echo $exchange['class_id']; ?></td>
+</tr>
+<tr>
 	<td>课程名称：</td>
 	<td><?php echo $exchange['class_name']; ?></td>
+</tr>
+<tr>
+<?php
+	if ($exchange['user_id'] != $_SESSION['id']) {
+?>
+	<td colspan="2"><input type="button" value="参与竞标" /></td>
+<?php
+	}
+?>
+	<td colspan="2"><input type="button" value="查看竞标情况" /></td>
 </tr>
 <?php
 }

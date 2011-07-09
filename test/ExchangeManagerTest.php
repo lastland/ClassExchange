@@ -20,9 +20,16 @@ function getExchangeInLimitTest() {
 	echo "Test for getExchangeInLimit end<br>";
 }
 
+function addCompeteTest() {
+	echo "Test for addCompete begin<br>";
+	ExchangeManager::addCompete(1, 7);
+	echo "Test for addCompete end<br>";
+}
+
 echo "Test begin<br>";
 #addExchangeTest();
 #getExchangeTest();
-getExchangeInLimitTest();
+#getExchangeInLimitTest();
+#addCompeteTest();
 echo "Test end<br>";
 ?>

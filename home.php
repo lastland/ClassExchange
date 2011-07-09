@@ -80,6 +80,8 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 						<td colspan="2">
 							欢迎你,<?php echo $user_info['user_name']; ?>!
 						</td>
+						<td>
+							<input type="button" value="登出" onclick="location.href='logout.php';" />
 					</tr>
 					<tr>
 						<td>

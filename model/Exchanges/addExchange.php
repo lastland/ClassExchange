@@ -10,10 +10,23 @@ include_once('../exchangemanager.php');
 		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 		<script type="text/javascript" src="../../js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
+		function showAClass(class_id) {
+			class_id = class_id ? class_id : 1;
+			$.ajax({
+				method: "GET",
+				url: "../../showClass.php",
+				data: "class_id=" + class_id,
+				dataType: "HTML",
+				success: function(response) {
+					$("#class-list").html(response);
+				}
+			});
+		}
+
 		function showclasses(classes) {
 			classesHTML = "<tr><th>课程编号</th><th>课程名称</th><th>课程类型</th><th>介绍</th></tr>";
 			for (var i = 0; i < classes.length; i++) {
-				classesHTML += "<tr><td>" + classes[i].class_id + "</td><td>" +
+				classesHTML += "<tr onclick='showAClass(" + classes[i].class_id + ")'><td>" + classes[i].class_id + "</td><td>" +
 					classes[i].class_name + "</td><td>" +
 					classes[i].class_type + "</td><td>" +
 					classes[i].class_introduction + "</td></tr>";
@@ -60,11 +73,15 @@ include_once('../exchangemanager.php');
 						echo " value='" . $_GET['class_name'] . "'";
 					}
 					?>/></td>
-					<td>回到<a href="<?php echo "http://" . $domain . "home.php"; ?>">首页</a></td>
+					<td><input type="button" value="回到首页" onclick="location.href='<?php echo "http://" . $domain . "home.php"; ?>';"/></a></td>
 				</tr>
 			</table>
-			<table class="classes-table">
-			</table>
+			<div id="classes-list">
+				<table class="classes-table">
+				</table>
+			</div>
+			<div id="class-list">
+			</div>
 		</form>
 	</body>
 </html>

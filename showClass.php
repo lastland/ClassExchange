@@ -2,6 +2,7 @@
 include_once('config.php');
 include_once('model/Users/SessionJudge.php');
 include_once('model/ClassManager.php');
+include_once('model/usermanager.php');
 if (isset($_GET['class_id'])) {
 	$class_info = ClassManager::getClass($_GET['class_id']);
 	$class_times = ClassManager::getClassTime($_GET['class_id']);
@@ -44,6 +45,17 @@ if (isset($_GET['class_id'])) {
 					<input type="button" value="添加该课程的交易" onclick="location.href='http://<?php echo $domain; ?>model/Exchanges/addAnExchange.php?class_id=<?php echo $class_info['class_id']; ?>'" />
 				</td>
 			</tr>
+			<?php
+			if (UserManager::confirmAuthority($_SESSION['id'], 1)) {
+			?>
+			<tr>
+				<td>
+					<input type="button" value="修改该课程的信息" onclick="location.href='http://<?php echo $domain; ?>addClass2.php?class_id=' + <?php echo $_GET['class_id']; ?>" />
+				</td>
+			</tr>
+			<?php
+			}
+			?>
 		</table>
 		</div>
 <?php

@@ -17,14 +17,15 @@ if (isset($_GET['exchange_id'])) {
 	<td colspan="3"><?php echo $exchange['user_name']; ?></td>
 </tr>
 <tr>
-	<td>课程编号：</td>
+	<td colspan="3">课程编号：</td>
 	<td><?php echo $exchange['class_id']; ?></td>
 </tr>
 <tr>
-	<td>课程名称：</td>
+	<td colspan="3">课程名称：</td>
 	<td><?php echo $exchange['class_name']; ?></td>
 </tr>
 <tr>
+	<td colspan="2"><input type="button" value="查看竞标情况" onclick="location.href='checkCompete.php?exchange_id=<?php echo $exchange['exchange_id']; ?>'" /></td>
 <?php
 	if ($exchange['user_id'] != $_SESSION['id']) {
 ?>
@@ -32,7 +33,6 @@ if (isset($_GET['exchange_id'])) {
 <?php
 	}
 ?>
-	<td colspan="2"><input type="button" value="查看竞标情况" onclick="location.href='checkCompete.php?exchange_id=<?php echo $exchange['exchange_id']; ?>'" /></td>
 </tr>
 <?php
 }

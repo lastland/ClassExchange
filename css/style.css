@@ -4,6 +4,14 @@ h2 {
 	text-align: center;
 }
 
+table {
+	margin: 0 auto;
+}
+
+td {
+	text-align: center;
+}
+
 .logintable {
  	background: #00e2ff;
 	color: #ffffff;
@@ -59,13 +67,20 @@ h2 {
 	margin: 0 auto;
 }
 
-.classes-table {
+#classes-list {
 	float: left;
 	background: #00e2ff;
 	border-radius: 8px;
 	padding: 1%;
 	margin: 1% 1% 1% 1%;
 	width: 55.8%;
+}
+
+.classes-table {
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1%;
+	margin: 1% 1% 1% 1%;
 }
 
 .classes-table td {
@@ -105,4 +120,12 @@ h2 {
 
 .class-show #classshower {
 	margin: 0 auto;
+}
+
+.host-div, #competitors-div, #my-exchanges-div {
+	background: #00e2ff;
+	border-radius: 8px;
+	padding: 1.5%;
+	margin: 1% auto;
+	width: 61.8%;
 }

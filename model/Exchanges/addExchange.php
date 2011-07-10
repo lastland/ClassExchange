@@ -10,6 +10,30 @@ include_once('../exchangemanager.php');
 		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 		<script type="text/javascript" src="../../js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
+		var begin_num = 0;
+		var end_num=30;
+
+		function prevPage() {
+			if (begin_num >= 30) {
+				begin_num -= 30;
+			}
+			getClasses($("#class-filter").val(), begin_num, end_num);
+		}
+
+		function nextPage() {
+			begin_num += 30;
+			getClasses($("#class-filter").val(), begin_num, end_num);
+		}
+
+		function renderPageTable() {
+			pageHTML = "<tr><td>";
+			if (begin_num != 0) {
+				pageHTML += "<input type='button' value='上一页' onclick='prevPage()' />";
+			}
+			pageHTML += "</td><td><input type='button' value='下一页' onclick='nextPage()' /></td></tr>";
+			$(".page").html(pageHTML);
+		}
+
 		function showAClass(class_id) {
 			class_id = class_id ? class_id : 1;
 			$.ajax({
@@ -32,13 +56,16 @@ include_once('../exchangemanager.php');
 					classes[i].class_introduction + "</td></tr>";
 			}
 			$(".classes-table").html(classesHTML);
+			renderPageTable();
 		}
 	
-		function getClasses(class_name) {
+		function getClasses(class_name, begin_num, end_num) {
+			begin_num = begin_num ? begin_num : 0;
+			end_num = end_num ? end_num : 30;
 			$.ajax({
 				method: "GET",
 				url: "http://<?php echo $domain ?>model/Classes/getClass.php",
-				data: "class_name=" + class_name,
+				data: "class_name=" + class_name + "&begin_num=" + begin_num + "&end_num=" + end_num,
 				dataType: "json",
 				success: function(classes) {
 					showclasses(classes);
@@ -78,6 +105,8 @@ include_once('../exchangemanager.php');
 			</table>
 			<div id="classes-list">
 				<table class="classes-table">
+				</table>
+				<table class="page">
 				</table>
 			</div>
 			<div id="class-list">

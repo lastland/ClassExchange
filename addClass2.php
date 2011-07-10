@@ -110,6 +110,7 @@
 	</head>
 	<body>
 		<h2>编辑上课时间</h2>
+		<center><input type="button" value="回到首页" onclick="location.href='home.php'" /></center>
 		<form action="model/Classes/editClass.php" method="post">
 			<table class="classtimetable-head">
 				<tr>

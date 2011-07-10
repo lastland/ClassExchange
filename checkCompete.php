@@ -5,6 +5,11 @@ include_once('model/Users/SessionJudge.php');
 include_once('model/exchangemanager.php');
 include_once('model/ClassManager.php');
 if (isset($_GET['exchange_id'])) {
+	if (isset($_GET['offset'])) {
+		$offset = $_GET['offset'];
+	} else {
+		$offset = 0;
+	}
 	$host_info = ExchangeManager::getDetailExchange($_GET['exchange_id']);
 	$host_classtime = ClassManager::getClassTime($_GET['exchange_id']);
 	$count = ExchangeManager::getCompetitorCount($_GET['exchange_id']);
@@ -105,7 +110,7 @@ if (isset($_GET['exchange_id'])) {
 				<tr>
 					<td><?php echo $timeTable[$host_classtime[$i]['start_time']]; ?></td>
 					<td><?php echo $timeTable[$host_classtime[$i]['end_time']]; ?></td>
-					<td><?php echo $timeTable[$host_classtime[$i]['day_in_week']]; ?></td>
+					<td><?php echo $dayTable[$host_classtime[$i]['day_in_week']]; ?></td>
 				</tr>
 				<?php
 				}
@@ -151,6 +156,16 @@ if (isset($_GET['exchange_id'])) {
 					echo "</td></tr>";
 				}
 				?>
+				<tr>
+					<?php
+					if ($offset != 0) {
+					?>
+					<td colspan="2"><input type="button" value="上一页" onclick="location.href='competeExchange.php?host_id=<?php echo $_GET['host_id']; ?>&offset=<?php echo ($offset - 1); ?>'"/></td>
+					<?php
+					}
+					?>
+					<td colspan="2"><input type="button" value="下一页" onclick="location.href='competeExchange.php?host_id=<?php echo $_GET['host_id']; ?>&offset=<?php echo ($offset + 1); ?>'"/></td>
+				</tr>
 			</table>
 		</div>
 	</body>

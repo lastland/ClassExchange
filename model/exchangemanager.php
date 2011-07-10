@@ -20,7 +20,7 @@ class ExchangeManager {
 	}
 
 	public static function getDetailExchange($exchange_id) {
-		$query = "SELECT * FROM classes NATURAL JOIN (SELECT * FROM exchanges NATURAL JOIN users) A WHERE exchange_id=$exchange_id;";
+		$query = "SELECT * FROM classes, exchanges, users WHERE exchanges.user_id=users.user_id AND exchanges.class_id=classes.class_id AND exchanges.exchange_id=$exchange_id;";
 		#echo $query;
 		$result = DBManager::executeQuery($query);
 		while ($row = mysqli_fetch_assoc($result)) {
@@ -40,7 +40,7 @@ class ExchangeManager {
 	}
 
 	public static function getExchangeInLimit($condition, $start_num, $end_num) {
-		$query = "SELECT " . self::$exchange_id . ", " . self::$class_for_exchange . ", " . self::$user_of_exchange . " FROM exchanges WHERE " . $condition . " LIMIT $start_num, $end_num;";
+		$query = "SELECT exchanges.exchange_id, exchanges.exc_exchange_id, classes.class_id, classes.class_name, users.user_id, users.user_name FROM classes, exchanges, users WHERE exchanges.user_id = users.user_id AND exchanges.class_id = classes.class_id AND $condition ORDER BY exchange_id DESC LIMIT $start_num, $end_num;";
 		#echo $query;
 		$result = DBManager::executeQuery($query);
 		$exchanges = array();
@@ -51,7 +51,7 @@ class ExchangeManager {
 	}
 
 	public static function getExchangeInLimitByName($class_name, $start_num, $end_num) {
-		$query = "SELECT exchange_id, class_id, class_name, user_id, user_name FROM classes NATURAL JOIN (SELECT * FROM exchanges NATURAL JOIN users) A WHERE INSTR(class_name, '$class_name') > 0 LIMIT $start_num, $end_num;";
+		$query = "SELECT exchanges.exchange_id, exchanges.exc_exchange_id, classes.class_id, classes.class_name, users.user_id, users.user_name FROM users, exchanges, classes WHERE exchanges.user_id = users.user_id AND exchanges.class_id = classes.class_id AND INSTR(classes.class_name, '$class_name') > 0 AND exchanges.exchange_status=0 ORDER BY exchange_id DESC LIMIT $start_num, $end_num;";
 		#echo $query . "<br>";
 		$result = DBManager::executeQuery($query);
 		$exchanges = array();
@@ -61,8 +61,8 @@ class ExchangeManager {
 		return $exchanges;
 	}
 
-	public static function getExchangeAvailableToCompete($user_id) {
-		$query = "SELECT * FROM classes NATURAL JOIN exchanges WHERE exchanges.user_id=$user_id AND exchanges.exchange_status=0";
+	public static function getExchangeAvailableToCompete($user_id, $begin_num, $end_num) {
+		$query = "SELECT * FROM classes NATURAL JOIN exchanges WHERE exchanges.user_id=$user_id AND exchanges.exchange_status=0 LIMIT $begin_num, $end_num";
 		#echo $query . "<br>";
 		$result = DBManager::executeQuery($query);
 		$exchanges = array();

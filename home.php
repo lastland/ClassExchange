@@ -14,6 +14,30 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
+			var begin_num = 0;
+			var end_num=30;
+
+			function prevPage() {
+				if (begin_num >= 30) {
+					begin_num -= 30;
+				}
+				getExchanges(begin_num, end_num);
+			}
+
+			function nextPage() {
+				begin_num += 30;
+				getExchanges(begin_num, end_num);
+			}
+
+			function renderPageTable() {
+				pageHTML = "<tr><td>";
+				if (begin_num != 0) {
+					pageHTML += "<input type='button' value='上一页' onclick='prevPage()' />";
+				}
+				pageHTML += "</td><td><input type='button' value='下一页' onclick='nextPage()' /></td></tr>";
+				$(".page").html(pageHTML);
+			}
+
 			function addExchange() {
 				link = "<?php echo "http://" . $domain . "model/Exchanges/addExchange.php"; ?>";
 				if ($("#class-filter").val() != "") {
@@ -35,14 +59,27 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 			}
 
 			function showExchanges(exchanges) {
-				var theList = "<tr><th>交易号</th><th>课程</th><th>交易拥有者</th></tr>";
+				var theList = "<tr><th>交易号</th><th>课程</th><th>交易拥有者</th><th>竞标的交易</th><th>竞标此交易的交易数量</th></tr>";
 				for (var i = 0; i < exchanges.length; i++) {
-					theList += "<tr onclick='showAnExchange(" + exchanges[i].exchange_id + ")'><td>" + exchanges[i].exchange_id + "</td><td>" + exchanges[i].class_name + "</td><td>" + exchanges[i].user_name + "</td></tr>";
+					theList += "<tr onclick='showAnExchange(" + exchanges[i].exchange_id + ")'><td>" + exchanges[i].exchange_id + "</td><td>" + exchanges[i].class_name + "</td><td>" + exchanges[i].user_name + "</td><td>";
+					if (exchanges[i].compete_for) {
+						theList += exchanges[i].compete_for;
+					} else {
+						theList += "无";
+					}
+					theList += "</td><td>";
+					if (exchanges[i].count) {
+						theList += exchanges[i].count;
+					}
+					theList += "</td></tr>";
 				}
 				$("#exchanges-list").html(theList);
+				renderPageTable();
 			}
 
 			function getExchangeEntries(begin_num, end_num) {
+				begin_num = begin_num ? begin_num : 0;
+				end_num = end_num ? end_num : 30;
 				$.ajax({
 					type: "GET",
 					url: "model/Exchanges/getExchanges.php",
@@ -54,11 +91,13 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 					});
 			}
 
-			function getExchanges() {
+			function getExchanges(begin_num, end_num) {
+				begin_num = begin_num ? begin_num : 0;
+				end_num = end_num ? end_num : 30;
 				$.ajax({
 					method: "GET",
 					url: "http://<?php echo $domain ?>model/Exchanges/getExchangesByName.php",
-					data: "class_name=" + $("#class-filter").val() + "&begin_num=0&end_num=30",
+					data: "class_name=" + $("#class-filter").val() + "&begin_num=" + begin_num + "&end_num=" + end_num,
 					dataType: "json",
 					success: function(exchanges) {
 						showExchanges(exchanges);
@@ -105,11 +144,13 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 			<div id="exchanges">
 				<table id="exchanges-list">
 				</table>
+				<table class="page">
+				</table>
 			</div>
 		</div>
 		<div class="exchange-detail">
-		<table id="exchange-detail-table">
-		</table>
+			<table id="exchange-detail-table">
+			</table>
 		</div>
 	</body>
 <?php

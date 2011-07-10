@@ -11,6 +11,17 @@ class ClassManager {
 		}
 		return $class_info;
 	}
+
+	public static function getClassInLimitByName($class_name, $begin_num, $end_num) {
+		$query = "SELECT class_id, class_name, class_type, class_introduction, class_remark FROM classes WHERE INSTR(class_name, '$class_name') > 0 LIMIT $begin_num, $end_num;";
+		#echo $query . "<br>";
+		$result = DBManager::executeQuery($query);
+		$class_info = array();
+		for ($i = 0; $row = mysqli_fetch_assoc($result); $i++) {
+			$class_info[$i] = $row;
+		}
+		return $class_info;
+	}
 	
 	public static function getClass($class_id) {
 		$query = "SELECT class_id, class_name, class_type, class_introduction, class_remark FROM classes where class_id=$class_id;";

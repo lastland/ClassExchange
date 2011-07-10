@@ -16,7 +16,12 @@ function addClassTimeTest() {
 	ClassManager::addClassTime(1, 1, 2, 1);
 }
 
+function getClassInLimitByName() {
+	print_r(ClassManager::getClassInLimitByName('a', 60, 90));
+}
+
 #addClassTest();
 #getClassTest();
-addClassTimeTest();
+#addClassTimeTest();
+getClassInLimitByName();
 ?>

@@ -11,18 +11,18 @@ include_once('../exchangemanager.php');
 		<script type="text/javascript" src="../../js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
 		var begin_num = 0;
-		var end_num=30;
+		var num = 13;
 
 		function prevPage() {
-			if (begin_num >= 30) {
-				begin_num -= 30;
+			if (begin_num >= 0) {
+				begin_num -= 1;
 			}
-			getClasses($("#class-filter").val(), begin_num, end_num);
+			getClasses($("#class-filter").val(), begin_num * 30, num);
 		}
 
 		function nextPage() {
-			begin_num += 30;
-			getClasses($("#class-filter").val(), begin_num, end_num);
+			begin_num += 1;
+			getClasses($("#class-filter").val(), begin_num * 30, num);
 		}
 
 		function renderPageTable() {

@@ -13,7 +13,7 @@ if (isset($_GET['exchange_id'])) {
 	$host_info = ExchangeManager::getDetailExchange($_GET['exchange_id']);
 	$host_classtime = ClassManager::getClassTime($_GET['exchange_id']);
 	$count = ExchangeManager::getCompetitorCount($_GET['exchange_id']);
-	$competitors = ExchangeManager::getExchangeCompeteForSomeone($_GET['exchange_id']);
+	$competitors = ExchangeManager::getExchangeCompeteForSomeone($_GET['exchange_id'], $offset * 30, 30);
 	$timeTable = array("", "第一节课", "第二节课", "第三节课", "第四节课", "第五节课", "第六节课", "第七节课", "第八节课", "第九节课", "第十节课", "第十一节课", "第十二节课", "第十三节课", "第十四节课");
 	$dayTable = array("", "周一", "周二", "周三", "周四", "周五", "周六", "周日");
 	$isOwner = ($_SESSION['id'] == $host_info['user_id']);
@@ -160,11 +160,11 @@ if (isset($_GET['exchange_id'])) {
 					<?php
 					if ($offset != 0) {
 					?>
-					<td colspan="2"><input type="button" value="上一页" onclick="location.href='competeExchange.php?host_id=<?php echo $_GET['host_id']; ?>&offset=<?php echo ($offset - 1); ?>'"/></td>
+					<td colspan="2"><input type="button" value="上一页" onclick="location.href='checkCompete.php?exchange_id=<?php echo $_GET['exchange_id']; ?>&offset=<?php echo ($offset - 1); ?>'"/></td>
 					<?php
 					}
 					?>
-					<td colspan="2"><input type="button" value="下一页" onclick="location.href='competeExchange.php?host_id=<?php echo $_GET['host_id']; ?>&offset=<?php echo ($offset + 1); ?>'"/></td>
+					<td colspan="2"><input type="button" value="下一页" onclick="location.href='checkCompete.php?exchange_id=<?php echo $_GET['exchange_id']; ?>&offset=<?php echo ($offset + 1); ?>'"/></td>
 				</tr>
 			</table>
 		</div>

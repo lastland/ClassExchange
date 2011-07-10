@@ -14,19 +14,19 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">
+			var num = 13;
 			var begin_num = 0;
-			var end_num=30;
 
 			function prevPage() {
-				if (begin_num >= 30) {
-					begin_num -= 30;
+				if (begin_num >= 0) {
+					begin_num -= 1;
 				}
-				getExchanges(begin_num, end_num);
+				getExchanges(begin_num * num, num);
 			}
 
 			function nextPage() {
-				begin_num += 30;
-				getExchanges(begin_num, end_num);
+				begin_num += 1;
+				getExchanges(begin_num * num, num);
 			}
 
 			function renderPageTable() {
@@ -79,7 +79,7 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 
 			function getExchangeEntries(begin_num, end_num) {
 				begin_num = begin_num ? begin_num : 0;
-				end_num = end_num ? end_num : 30;
+				end_num = end_num ? end_num : num;
 				$.ajax({
 					type: "GET",
 					url: "model/Exchanges/getExchanges.php",
@@ -93,7 +93,7 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 
 			function getExchanges(begin_num, end_num) {
 				begin_num = begin_num ? begin_num : 0;
-				end_num = end_num ? end_num : 30;
+				end_num = end_num ? end_num : num;
 				$.ajax({
 					method: "GET",
 					url: "http://<?php echo $domain ?>model/Exchanges/getExchangesByName.php",
@@ -106,7 +106,7 @@ if (!(isset($_SESSION['id']) && isset($_SESSION['username']) && ($_SESSION['id']
 			}
 
 			$(document).ready(function() {
-				getExchangeEntries(0, 30);
+				getExchangeEntries(begin_num * 30, num);
 			});
 		</script>
 	</head>

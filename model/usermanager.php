@@ -3,7 +3,7 @@ include_once('DBManager.php');
 class UserManager {
 	public static function getUserInfo($username) {
 		$query = "SELECT user_id, user_name, user_password FROM users WHERE user_name='$username';";
-		$result = DBManager::executeQuery($query);
+		$result = DBManager::executeQuery($query, 2);
 		while ($row = mysqli_fetch_assoc($result)) {
 			$user_info = $row;
 		}
@@ -13,7 +13,7 @@ class UserManager {
 	public static function getUserInfoById($id) {
 		$query = "SELECT user_id, user_name, user_good_eval, user_bad_eval, authority FROM users WHERE user_id=$id;";
 		#echo $query . "<br>";
-		$result = DBManager::executeQuery($query);
+		$result = DBManager::executeQuery($query, 2);
 		while ($row = mysqli_fetch_assoc($result)) {
 			$user_info = $row;
 		}
@@ -42,7 +42,7 @@ class UserManager {
 	}
 
 	public static function argsValid($username, $password, $email, $mobile, $description) {
-		$link = DBManager::getConnection();
+		$link = DBManager::getConnection(2);
 		$flag = true;
 		if (!self::usernameValid(mysqli_real_escape_string($link, $username))) {
 			$flag = false;
@@ -66,11 +66,11 @@ class UserManager {
 		if (self::argsValid($username, $password, $email, $mobile)) {
 			$query = "INSERT INTO users(user_name, user_password, user_mobile, user_email) VALUES ('$username', '$password', '$mobile', '$email');";
 			#echo $query . "<br>";
-			DBManager::executeQuery($query);
+			DBManager::executeQuery($query, 0);
 			if ($description != "") {
 				$query = "UPDATE users SET user_description='$description' WHERE user_email='$email';";
 				#echo $query;
-				DBManager::executeQuery($query);
+				DBManager::executeQuery($query, 0);
 			}
 		}
 	}

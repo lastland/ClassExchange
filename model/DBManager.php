@@ -1,17 +1,22 @@
 <?php
 class DBManager {
-	public static function getConnection() {
+	public static function getConnection($user_id) {
+		if (!isset($user_id) || $user_id > 2 || $user_id < 0) {
+			$user_id = 2;
+		}
+		$user = array('root', 'dealer', 'checker');
+		$pass = array('31415', 'dealtime', 'checkerpasser');
 		$connection = mysqli_connect(
 			'localhost',
-			'root',
-			'31415',
+			$user[$user_id],
+			$pass[$user_id],
 			'ClassExchange');
 		mysqli_set_charset($connection, "utf8");
 		return $connection;
 	}
 
-	public static function executeQuery($query) {
-		$link = self::getConnection();
+	public static function executeQuery($query, $auth) {
+		$link = self::getConnection($auth);
 		if ($link) {
 			return mysqli_query($link, $query);
 		} else {
@@ -19,8 +24,8 @@ class DBManager {
 		}
 	}
 
-	public static function executeInsert($query) {
-		$link = self::getConnection();
+	public static function executeInsert($query, $auth) {
+		$link = self::getConnection($auth);
 		if ($link) {
 			mysqli_query($link, $query);
 			return mysqli_insert_id($link);
@@ -29,8 +34,8 @@ class DBManager {
 		}
 	}
 
-	public static function executeTransaction($queries) {
-		$link = self::getConnection();
+	public static function executeTransaction($queries, $auth) {
+		$link = self::getConnection($auth);
 		if ($link) {
 			mysqli_query($link, "START TRANSACTION;");
 			for ($i = 0; $i < sizeof($queries); $i++) {
